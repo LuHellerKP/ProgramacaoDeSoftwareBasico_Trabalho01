@@ -56,5 +56,3 @@ dkms.conf
 !*.*
 !*/
 
-# Output testing images
-assets/output
