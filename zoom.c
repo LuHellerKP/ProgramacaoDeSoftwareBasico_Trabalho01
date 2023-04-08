@@ -3,47 +3,115 @@
 
 int main()
 {
-	struct image_s data;
-	struct image_s *image = &data;
-	int i, j, r;
+	struct image_s data, newData;
+	struct image_s *image = &data, *newImage = &newData;
+	int r,
+		// coluna
+		x,
+		// linha
+		y;
 
-	r = read_ppm("lena.ppm", image);
+	r = read_ppm("maru.ppm", image);
+
+	// criando nova imagem vazia.
+	r = new_ppm(newImage, image->width * 3, image->height * 3);
 
 	if (r == 0)
 	{
-		printf("width: %d, height: %d\n", image->width, image->height);
-		for (j = 0; j < image->height; j++)
+		for (y = 0; y < image->height; y++)
 		{
-			for (i = 0; i < image->width; i++)
+			for (x = 0; x < image->width; x++)
 			{
-				printf("(%d %d) %02x %02x %02x\n", i, j,
-					   image->pix[j * image->width + i].r, //convertendo linha e coluna para um vetor (matriz n existe; quando termina a primeira linha de 512 pixels, vai ter a próxima linha (1º pixel dela)); transformando array em algo como se fosse uma matriz (largura multiplicada pela linha mais a coluna)
-					   image->pix[j * image->width + i].g,
-					   image->pix[j * image->width + i].b);
+				// (Red) Primeira condição (cor = [0 ... 74])
+				if (image->pix[y * image->width + x].r < 75)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x].r = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x].r = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x].r = 0;
+				}
+				// (Red) Segunda condição (cor = [75 ... 134])
+				else if (image->pix[y * image->width + x].r < 135)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x].r = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x].r = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x].r = 0;
+				}
+				// (Red) Terceira condição (cor = [135 ... 179])
+				else if (image->pix[y * image->width + x].r < 180)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x].r = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x].r = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x].r = 255;
+				}
+				// (Red) Quarta condição (cor = [180 ... 255])
+				else if (image->pix[y * image->width + x].r < 255)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x].r = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x].r = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x].r = 255;
+				}
+
+				// (Green) Primeira condição (cor = [0 ... 74])
+				if (image->pix[y * image->width + x].g < 75)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 1].g = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 1].g = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 1].g = 0;
+				}
+				// (Green) Segunda condição (de cor = [75 ... 134])
+				else if (image->pix[y * image->width + x].g < 135)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 1].g = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 1].g = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 1].g = 0;
+				}
+				// (Green) Terceira condição (de cor = [135 ... 179])
+				else if (image->pix[y * image->width + x].g < 180)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 1].g = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 1].g = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 1].g = 255;
+				}
+				// (Green) Quarta condição (de cor = [180 ... 255])
+				else if (image->pix[y * image->width + x].g < 255)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 1].g = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 1].g = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 1].g = 255;
+				}
+
+				// (Blue) Primeira condição (cor = [0 ... 74])
+				if (image->pix[y * image->width + x].b < 75)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 2].b = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 2].b = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 2].b = 0;
+				}
+				// (Blue) Segunda condição (de cor = [75 ... 134])
+				else if (image->pix[y * image->width + x].b < 135)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 2].b = 0;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 2].b = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 2].b = 0;
+				}
+				// (Blue) Terceira condição (de cor = [135 ... 179])
+				else if (image->pix[y * image->width + x].b < 180)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 2].b = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 2].b = 0;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 2].b = 255;
+				}
+				// (Blue) Quarta condição (de cor = [180 ... 255])
+				else if (image->pix[y * image->width + x].b < 255)
+				{
+					newImage->pix[3 * y * newImage->width + 3 * x + 2].b = 255;
+					newImage->pix[3 * y + 1 * newImage->width + 3 * x + 2].b = 255;
+					newImage->pix[3 * y + 2 * newImage->width + 3 * x + 2].b = 255;
+				}
 			}
 		}
-		//é possível alterar a imagem
-		image->pix[50 * image->width + 20].r = 255;
-		image->pix[50 * image->width + 20].g = 255;
-		image->pix[50 * image->width + 20].b = 255;
-		//criando outra imagem a partir do mesmo vetor --> cuidar com o nome, se colocar o mesmo vai substituir
-		write_ppm("lena_copy.ppm", image);
 
-		free_ppm(image);
-	}
-	//criando nova imagem vazia.
-	r = new_ppm(image, 675, 428);
-	//Escrevendo na imagem criada 3 pontos de cores diferentes (criei imagem do zero e to gravando nela)
-	if (r == 0)
-	{
-		image->pix[100 * image->width + 125].r = 255;
-		image->pix[27 * image->width + 440].g = 255;
-
-		image->pix[371 * image->width + 10].r = 192;
-		image->pix[371 * image->width + 10].g = 192;
-		image->pix[371 * image->width + 10].b = 192;
-		//free para liberar memória.
-		write_ppm("test.ppm", image);
+		write_ppm("maru_copy.ppm", newImage);
 		free_ppm(image);
 	}
 
