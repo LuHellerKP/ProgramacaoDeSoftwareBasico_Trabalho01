@@ -23,7 +23,13 @@
 
 ### Para executar pelo terminal:
 
--   Execute com
+-   Linux:
+
     ```sh
         ./zoom
+    ```
+
+-   Windows:
+    ```cmd
+        zoom
     ```
